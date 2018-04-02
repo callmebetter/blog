@@ -8,20 +8,22 @@ define(function(require) {
       loaded: true
     }
   }
-
+ var init = false;
   //获取明细
   var namespace = {
-    getFullReturnRecord: function(param) {
+    getFullReturnRecord: function(options) {
       $.AMUI.progress.start();
       canchange = false;
       $.ajax({
         url: m.baseUrl + '/financial/GetFullReturnRecord',
         type: 'post',
-        data: param || { Year: 2018 },
+        data: options || { Year: 2018 },
         dataType: 'jsonp',
         jsonp: 'callback',
         async:false
       }).done(function(ret) {
+        var getYear = (options || { Year: 2018 })['Year'];
+        console.log(getYear)
         $.AMUI.progress.done();
         canchange = true;
         if (ret.status && ret.data) {
@@ -33,22 +35,24 @@ define(function(require) {
           if (ret.data.List && ret.data.List.length > 0) {
             var html = '<ul class="unit">';
             $.each(ret.data.List, function(k, v) {
-              console.log(k, v)
+              // console.log(k, v)
               // console.log(v == null)
-              var currentMonth = new Date().getMonth();
+              var curDate = new Date();
+              var currentMonth = curDate.getMonth();
+              var currentYearBool = curDate.getFullYear() == getYear;
               var pregress ;
               switch(true){
-                case k > currentMonth:
+                case k > currentMonth && currentYearBool:
                      pregress = '待返现';
                      break;
-                case k == currentMonth:
+                case k == currentMonth && currentYearBool:
                      pregress = '返现中';
                      break;
-                case k < currentMonth:
+                case k < currentMonth && currentYearBool:
                      pregress = '已返现';
                      break;
                  default:
-                    pregress = '';
+                    pregress = '待返现';
                     break;
               }
               var monthyTotal = v ? v.Item1 : 0;
@@ -60,11 +64,11 @@ define(function(require) {
                           <div><span>￥' + monthyTotal + '</span><span>'+ pregress +' <i data-isempty="'+ isEmpty +'" class="icon ' + className + '"></i></span></div>\
                         </div>\
                         <ul>'
-              console.log(v != undefined)
+              // console.log(v != undefined)
               if (v != undefined) {
                 $.each(v.Item2, function(idx, val) {
                   var returnDate = namespace.getMonthDate(val.ReturnDate);
-                  var returnStatus = val.ReturnStatus == 1 ? '已返现' : '返现中';
+                  var returnStatus = val.ReturnStatus == 1 ? '已返现' : '待返现';
                   html += '<li>\
                           <div>' + returnDate + '</div>\
                           <div>\
@@ -79,8 +83,6 @@ define(function(require) {
             })
             html += '</ul>'
             $("#fullbackdetail").append(html);
-            namespace.eventHander();
-            namespace.switchTab();
 
             $('#container').show();
           }else {
@@ -93,6 +95,8 @@ define(function(require) {
           $('#fullbackdetail').append(html);
           console.log('loading')
           }
+            namespace.eventHander();
+            namespace.switchTab();
           var xqTab = {
             changeHeight: function(obj) {
               var height = $(obj).height();
@@ -109,7 +113,7 @@ define(function(require) {
       })
     },
     getMonthDate: function(timestamp) {
-      console.log(timestamp)
+      // console.log(timestamp)
       var timestamp = parseInt(timestamp.substr(6, 13));
       var data = new Date(timestamp);
       var month = data.getMonth() + 1;
@@ -119,7 +123,7 @@ define(function(require) {
       return month + '/' + day;
     },
     eventHander: function() {
-      $('.icon').parent().on('click', function() {
+      $('.icon').parent().unbind('click').on('click', function() {
         console.log('click icon')
         var $detailDom = $(this).closest('.list-item').siblings();
         //没有返现明细点击并不会展开，也不需要向右箭头
@@ -147,8 +151,8 @@ define(function(require) {
     switchTab: function(){
           //tab切换
       $('.tab').find('li').click(function() {
-         if (!canchange) { return }
         console.log('switch tab')
+         if (!canchange) { return }
         //to do 首次更新数据
         //to do 没有数据不进行切换
         $('.expand').removeClass('expand'); //数据清除状态
@@ -161,7 +165,7 @@ define(function(require) {
           }
           namespace.getFullReturnRecord(param[year]);
         }
-        console.log(param)
+        // console.log(param)
         var wiz = $(this).width(); //tab的宽度
         var index = $(this).index(); //tab的索引
         var wizCon_ul = $('.inner').find('ul').width()

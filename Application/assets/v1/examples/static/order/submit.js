@@ -42,6 +42,7 @@ define(function(require) {
     var timeinterval = null;//限时活动定时器
     var unReturnedCash = 0;//待满返金额
     var upto500Back500List = [];//参与满500返500商品集
+    var isAgreeFullRet =false;//是
 
     // SeckillProductId + ProductId   针对秒杀活动
     if ($_GET['seckillproductid'] && $_GET['productid']) {
@@ -84,9 +85,9 @@ define(function(require) {
            * @param  {endTime}  - option
            * by-ouyang
            */
-          var nowTime = new Date().getTime()
+          var nowTime = new Date().getTime();
           var startTime = new Date(startTime).getTime() || nowTime;
-          var endTime = undefined == endTime ? nowTime : new Date(endTime).getTime()
+          var endTime = undefined == endTime ? nowTime : new Date(endTime).getTime();
           if (nowTime >= startTime && nowTime <= endTime) return true
           return false
         }
@@ -182,8 +183,9 @@ define(function(require) {
                 var ExchangeActivitiesId = ret.data.ExchangeActivitiesId ? ret.data.ExchangeActivitiesId : '';//换购id
                 var ActBrandId = ret.data.ActBrandId || [];
                 //满300返300
-                unReturnedCash = ret.data.WaitingReturnAmount;
+                unReturnedCash = ret.data ? ret.data.Surplus : unReturnedCash;
                 var FullReturnProductList = ret.data.FullReturnProductList || [];
+                isAgreeFullRet = ret.data.IsAgreeFullRet;
                 //包邮条件
                 productSaleLimitConfig = ret.data.ProductSaleLimitConfig;
                 IsExistComplimentary = ret.data.IsExistComplimentary;//初始赠品条件，控制选择赠品按钮显示隐藏
@@ -208,7 +210,7 @@ define(function(require) {
                     <div class="getList">'
                     $.each(IntegralmallPrdMain.FOrderProductList, function(k, v) {
                         v.isFullbackFiveHundred = FullReturnProductList.indexOf(v.ProductId) >= 0 ;//满500送500，随机变量模拟
-                        var upto500Back500Html = v.isFullbackFiveHundred ? '<i class="z_qqg">满300送300</i>' : '';
+                        var upto500Back500Html = v.isFullbackFiveHundred ? '<i class="z_qqg">安心返</i>' : '';
                         var discount = ((v.Price / v.MarketPrice) * 10).toFixed(1);
                         var DisCount = v.DistributorDisCount ? (1 - v.DistributorDisCount) : 1;
                         IntegralmallProductHtml += '<div class="d_order_product pad4 product_d"  data-DisCount="' + DisCount + '" data-SalesPrice="' + v.Price + '" data-Count="' + v.Count + '">\
@@ -302,7 +304,7 @@ define(function(require) {
                     $.each(OrderProductMain.FOrderProductList, function(k, v) {
                         v.isFullbackFiveHundred = FullReturnProductList.indexOf(v.ProductId) >= 0 ;//满500送500，随机变量模拟
                         console.log(v.isFullbackFiveHundred)
-                        var upto500Back500Html = v.isFullbackFiveHundred ? '<i class="z_qqg">满300送300</i>' : '';
+                        var upto500Back500Html = v.isFullbackFiveHundred ? '<i class="z_qqg">安心返</i>' : '';
                         var discount = ((v.Price / v.MarketPrice) * 10).toFixed(1);
                         var DisCount = v.DistributorDisCount ? (1 - v.DistributorDisCount) : 1;
                         OrderProductHtml += '<div class="d_order_product pad4 product_d"  data-DisCount="' + DisCount + '" data-SalesPrice="' + v.Price + '" data-Count="' + v.Count + '">\
@@ -354,7 +356,7 @@ define(function(require) {
                         <div class="getList">'
                     $.each(SeckillProductMain.FOrderProductList, function(k, v) {
                         v.isFullbackFiveHundred = FullReturnProductList.indexOf(v.ProductId) >= 0 ;//满500送500，随机变量模拟
-                        var upto500Back500Html = v.isFullbackFiveHundred ? '<i class="z_qqg">满300送300</i>' : '';
+                        var upto500Back500Html = v.isFullbackFiveHundred ? '<i class="z_qqg">安心返</i>' : '';
                         var discount = ((v.Price / v.MarketPrice) * 10).toFixed(1);
                         var DisCount = v.DistributorDisCount ? (1 - v.DistributorDisCount) : 1;
                         SeckillProductHtml += '<div class="d_order_product pad4 product_d"  data-DisCount="' + DisCount + '" data-SalesPrice="' + v.Price + '" data-Count="' + v.Count + '">\
@@ -407,7 +409,7 @@ define(function(require) {
                         <div class="getList">'
                     $.each(OayepProductMain.FOrderProductList, function(k, v) {
                         v.isFullbackFiveHundred = FullReturnProductList.indexOf(v.ProductId) >= 0 ;//满500送500，随机变量模拟
-                        var upto500Back500Html = v.isFullbackFiveHundred ? '<i class="z_qqg">满300送300</i>' : '';
+                        var upto500Back500Html = v.isFullbackFiveHundred ? '<i class="z_qqg">安心返</i>' : '';
                         var discount = ((v.Price / v.MarketPrice) * 10).toFixed(1);
                         var DisCount = v.DistributorDisCount ? (1 - v.DistributorDisCount) : 1;
                         hasqqg = true;
@@ -458,7 +460,7 @@ define(function(require) {
                         <div class="getList">'
                     $.each(HtProductMain.FOrderProductList, function(k, v) {
                         v.isFullbackFiveHundred = FullReturnProductList.indexOf(v.ProductId) >= 0 ;//满500送500，随机变量模拟
-                        var upto500Back500Html = v.isFullbackFiveHundred ? '<i class="z_qqg">满300送300</i>' : '';
+                        var upto500Back500Html = v.isFullbackFiveHundred ? '<i class="z_qqg">安心返</i>' : '';
                         var discount = ((v.Price / v.MarketPrice) * 10).toFixed(1);
                         var DisCount = v.DistributorDisCount ? (1 - v.DistributorDisCount) : 1;
                         hasht = true;
@@ -513,7 +515,7 @@ define(function(require) {
                     <div class="getList">'
                         $.each(val.FOrderProductList, function(k, v) {
                             v.isFullbackFiveHundred = FullReturnProductList.indexOf(v.ProductId) >= 0 ;//满500送500，随机变量模拟
-                            var upto500Back500Html = v.isFullbackFiveHundred ? '<i class="z_qqg">满300送300</i>' : '';
+                            var upto500Back500Html = v.isFullbackFiveHundred ? '<i class="z_qqg">安心返</i>' : '';
                             var discount = ((v.Price / v.MarketPrice) * 10).toFixed(1);
                             var DisCount = v.DistributorDisCount ? (1 - v.DistributorDisCount) : 1;
                             LuckyBagHtml += '<div class="d_order_product pad4 product_d"  data-DisCount="' + DisCount + '" data-SalesPrice="' + v.Price + '" data-Count="' + v.Count + '">\
@@ -568,7 +570,7 @@ define(function(require) {
                     <div class="getList">'
                         $.each(val.FOrderProductList, function(k, v) {
                             v.isFullbackFiveHundred = FullReturnProductList.indexOf(v.ProductId) >= 0 ;//满500送500，随机变量模拟
-                            var upto500Back500Html = v.isFullbackFiveHundred ? '<i class="z_qqg">满300送300</i>' : '';
+                            var upto500Back500Html = v.isFullbackFiveHundred ? '<i class="z_qqg">安心返</i>' : '';
                             var discount = v.Price == v.MarketPrice ? '原价':((v.Price / v.MarketPrice) * 10).toFixed(1) + '折';
                             var DisCount = v.DistributorDisCount ? (1 - v.DistributorDisCount) : 1;
                             PrefectureProductHtml += '<div class="d_order_product pad4 product_d"  data-DisCount="' + DisCount + '" data-SalesPrice="' + v.Price + '" data-Count="' + v.Count + '">\
@@ -627,7 +629,7 @@ define(function(require) {
                     <div class="getList">'
                         $.each(val.FOrderProductList, function(k, v) {
                             v.isFullbackFiveHundred = FullReturnProductList.indexOf(v.ProductId) >= 0 ;//满500送500，随机变量模拟
-                            var upto500Back500Html = v.isFullbackFiveHundred ? '<i class="z_qqg">满300送300</i>' : '';
+                            var upto500Back500Html = v.isFullbackFiveHundred ? '<i class="z_qqg">安心返</i>' : '';
                             var discount = ((v.Price / v.MarketPrice) * 10).toFixed(1);
                             var DisCount = v.DistributorDisCount ? (1 - v.DistributorDisCount) : 1;
                             SnapUpActivitiesHtml += '<div class="d_order_product pad4 product_d"  data-DisCount="' + DisCount + '" data-SalesPrice="' + v.Price + '" data-Count="' + v.Count + '">\
@@ -728,18 +730,45 @@ define(function(require) {
                     $(".choose_discount").hide(); $("#use_code").hide();
                     if(!log){timer();log= setInterval(timer,1000);}
                 }
-                if(isdeadline){
+                if(isdeadline){//限时活动
                    $(".choose_discount").remove();
                    $("#use_code").remove();
                    if(!timeinterval){
                       datetimeFormat.timer();
                       timeinterval = setInterval(datetimeFormat.timer,1000);
                      }
-                     $('#exchangeGood').removeClass('hidden');
                      var seckillProductId = OrderDetial.shopInfo.SeckillProductId || '';
-                     $('#skip_link').attr('data-src', '/order/coudan?exchangeid=' + ExchangeActivitiesId+"&seckillProductId="+seckillProductId);
+                     if(ExchangeActivitiesId && ExchangeActivitiesId > 0){
+                         $('#exchangeGood').removeClass('hidden');
+                         $('#skip_link').attr('data-src', '/order/coudan?exchangeid=' + ExchangeActivitiesId+"&seckillProductId="+seckillProductId);
+                     }
                 }
+                  console.log(isAgreeFullRet)
+                if( upto500Back500List &&  upto500Back500List.length > 0 && !isAgreeFullRet){
+                  //满300送300活动商品
+                 $('#fullbackrules').modal({closeViaDimmer: 0});
+                  $('.btn-confirm').click(function(){
+                    $.ajax({
+                      url: m.baseUrl + '/activity/FGetFullReturnSetAgreeStatus',
+                      data: {IsAgreeFullRet: true},
+                      type: 'post',
+                      dataType: 'jsonp',
+                      jsonp: 'callback',
+                    }).done(function(ret){
+                      console.log(ret)
+                      console.log('IsAgreeFullRet')
+                    })
+                 })
+                 $('.btn-cancel').click(function(){
+                    if (isWeb) {
+                    // history.back(-1);
+                    setTimeout(function(){m.back();},500);
 
+                    } else {
+                        setTimeout(function() { Jockey.send("DidBackAndReload-" + urlString) }, appDelay2);
+                        }
+                     })
+                }
 
                 chooseCoupon();
                 function chooseCoupon() {
@@ -1057,7 +1086,6 @@ define(function(require) {
             if (!UserAddressId) { return };
             var isUseIntegralBoolen = $('.use-integral-button').attr('data-use-integral') == 'true' ? true : false;
             var isUseIntegralBoolen = ($("#integral_use").hasClass("true") || isUseIntegralBoolen) ? true :false;
-
             var ExpressId = $("#LogisticsList").find("option:selected").data('expressid');
             var ret = m.ajax({
                 url: m.baseUrl + '/order/GetPostFee',
@@ -1135,6 +1163,7 @@ define(function(require) {
         },
         goPayEvent: function() {
             $('.gopay').click(function() {
+
                 // 判断是否登录
                 if (!m.getCookie('ppgid')) {
                     m.Wislogin();
@@ -1261,6 +1290,7 @@ define(function(require) {
             }
             $fullback.text('￥' + txt);
             //满500送500活动
+            if(upto500Back500List.length <= 0) return;
             var upto500Back500Sum = 0; //满500送500商品金额
             var html = ''; //展示信息
             var $order_fullback = $('#order_fullback');
@@ -1271,16 +1301,16 @@ define(function(require) {
             $.each(upto500Back500List, function(k, v) {
                 upto500Back500Sum += +v.discountedFee;
             })
-            console.log(upto500Back500Sum)
+            // console.log(upto500Back500Sum)
             var attached = upto500Back500Sum + unReturnedCash; //待满返金额+订单总价
             if (attached >= 300) {
-                html = ' <span>已可参与返现300元活动</span><span id="dropdown"><i class="icon icon-right"></i></span>';
+                html = ' <span>已可参与安心返活动</span><span id="dropdown"><i class="icon icon-right"></i></span>';
             } else if (attached >= 0) {
                 var fullback_delta = 300 - attached;
                 html = ' <span> 再买<i id="order_delta" >' + fullback_delta.toFixed(2) + '</i>可返' +
-                                     '现金300</span><span id="dropdown"><i class="icon icon-right"></i></span>';
+                                     '现金270</span><span id="dropdown"><i class="icon icon-right"></i></span>';
             } else {}
-            $order_fullback.html(html);
+            $order_fullback.show().html(html);
             $('#fb_amount').text(upto500Back500Sum);
             // $('#upto500back').slideDown(400);
         },
@@ -1292,14 +1322,18 @@ define(function(require) {
            if(!IsExistComplimentary) return  false;
            $('.showGift').slideUp().empty();
            localStorage.removeItem('paramAboutGift');
-        }, clearExchangeInfo: function(){
+        },
+         clearExchangeInfo: function(){
           /**
            *  使用积分，优惠券，优惠券码要重置赠品信息，让用户重新去选择换购商品
           */
              $('.showexchangegood').slideUp().empty();
              OrderDetial.exchangePrice = 0;
              localStorage.removeItem('coudan');
-           }
+           },
+         acceptAgreement: function(){
+
+         }
 
     }
     OrderDetial.init();
@@ -1515,7 +1549,6 @@ define(function(require) {
             $(this).removeClass('true').addClass('false');
             UseIntegralPrice = 0;
             $('.total_all').find(".integral_tag").remove();
-
         } else {
             var totalPri = canUseIntegralPrice ;
             if(userIntegral<1000 || totalPri<20 ){return;}
