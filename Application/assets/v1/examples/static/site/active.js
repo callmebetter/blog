@@ -232,9 +232,6 @@ $(document).ready(function(){
                                     salesNum = v.Sales;
                                 }
 
-                    if(v.ProductType != 400){
-                          GoodsList += '<div style="color: #999;font-size:13px;margin-top:3px">月销量：'+ (v.Sales + v.BaseSales) +'</div>'
-                    }
                     GoodsList +='<div class="w_goodlist_price" style="margin-top:8px">\
                                     <p class="d_goods_price" style="margin-top:0px;">&yen;<span class="sale_price">'+ v.Price +'</span>'
                     if(v.Price != v.MarketPrice ){
@@ -244,7 +241,12 @@ $(document).ready(function(){
                     if(v.Discount != 1){
                         GoodsList +='<p class="goodlist_discount" style="margin-top:0px;"><span class="">'+m.discountPipe(v.Discount)+'</span></p>'
                     }
-                    GoodsList +='</div></div></li>';
+                    GoodsList += '</div>';
+
+                    if(v.ProductType != 400){
+                          GoodsList += '<div style="color: #999;font-size:13px;margin-top:3px">月销量：'+ (v.Sales + v.BaseSales) +'</div>'
+                    }
+                    GoodsList +='</div></li>';
                 });
                 $(".d_goods_list ul").append(GoodsList);
                 $("img.lazy"+PageNo).lazyload({
@@ -450,6 +452,7 @@ $(document).ready(function(){
             jsonp:'callback',
             type:'post'
         }).done(function(ret){
+          console.log(ret)
             ProductList = ret.data.ModelList;
             if(ret.status){
                 if(ProductList.length>0){
@@ -491,31 +494,41 @@ $(document).ready(function(){
        }
         $(this).addClass("selected").siblings().removeClass("selected");
         var i=$(this).index();
+        console.log(i)
         BrandIdKey = i-1;
         var CateTag = '<li class="sift-item  J_siftItem" data-onecatid="" >全部\
                             <span class="icon-selected"></span>\
                            </li>';
         if(BrandIdKey>=0){
            var data=ProductList[BrandIdKey].CatInfos;
+           console.log( 'ProductList-%o' ,ProductList)
            $.each(data,function(k,v) {
-               CateTag += '<li class="sift-item" data-onecatid="'+ v.OneCatId +'">'+ v.OneCatName +'\
+            console.log(k)
+               var className = k > 4 ? ' hidden': '';
+               CateTag += '<li class="sift-item '+ className +'" data-onecatid="'+ v.OneCatId +'">'+ v.OneCatName +'\
                                 <span class="icon-selected"></span>\
                            </li>';
            });
 
         }else{
+           console.log( 'ProductList-%o' ,ProductList)
            var OneCats =[];
            $.each(ProductList,function(key,val){
                 $.each(val.CatInfos,function(k,v){
-                    OneCats[v.OneCatId] = v.OneCatName;
+                  console.log(v)
+                    // OneCats[v.OneCatId] = v.OneCatName;
+                    OneCats.push(v);
 
                 })
            })
-           for(i in OneCats){
-                CateTag += '<li class="sift-item" data-onecatid="'+ i +'">'+ OneCats[i] +'\
+           console.log(OneCats)
+           $.each(OneCats, function(i, v){
+            v && console.log(i)
+             var className = i > 4 ? ' hidden': '';
+                if(v){CateTag += '<li class="sift-item '+ className +'" data-onecatid="'+ v.OneCatId +'">'+ v.OneCatName +'\
                                 <span class="icon-selected"></span>\
-                           </li>';
-           }
+                           </li>';}
+           })
         }
         CateTag+='<div class="clear"></div>';
         $(".category_tag").html(CateTag);
@@ -525,7 +538,7 @@ $(document).ready(function(){
         $(".category_tag").find(".sift-item").eq(0).trigger('click');
     });
 
-    //筛选条件  品类
+    //筛选条件  一级品类
     $(document).on("click",".category_tag .sift-item",function(){
         if($(this).hasClass("selected")){
             return ;
@@ -542,9 +555,12 @@ $(document).ready(function(){
             if(BrandIdKey>=0){
                    var data = ProductList[BrandIdKey].CatInfos;
                    $.each(data,function(key,val) {
+                    console.log('%s--%o', key, val)
                         if(val.OneCatId==OneCatId){
                             $.each(val.CatInfos,function(k,v){
-                                CateTag += '<li class="sift-item" data-catid="'+ v.CatId +'">'+ v.CatName +'\
+                              console.log('%d-%o', k,v)
+                              var className = k > 4 ? ' hidden': '';
+                                CateTag += '<li class="sift-item '+ className +'" data-catid="'+ v.CatId +'">'+ v.CatName +'\
                                             <span class="icon-selected"></span>\
                                        </li>';
 
@@ -556,24 +572,28 @@ $(document).ready(function(){
                     $.each(ProductList,function(key,val){
                         $.each(val.CatInfos,function(k,v){
                             if(v.OneCatId==OneCatId){
-                                $.each(v.CatInfos,function(){
-                                     Cats[this.CatId] = this.CatName;
+                                $.each(v.CatInfos,function(k, v){
+                                     // Cats[this.CatId] = this.CatName;
+                                     Cats.push(v)
                                 })
                              }
                         })
                     })
-                    for(i in Cats){
-                        CateTag += '<li class="sift-item" data-catid="'+ i +'">'+ Cats[i] +'\
+                    console.log(Cats)
+                    $.each( Cats, function(i, v){
+                       var className = i > 4 ? ' hidden': '';
+                        CateTag += '<li class="sift-item '+ className +'" data-catid="'+ j.CatId +'">'+ j.CatName +'\
                                 <span class="icon-selected"></span>\
                            </li>';
-                    }
+                    })
              }
         }else{
             var Cats =[];
             if(BrandIdKey>=0){
                 $.each(ProductList[BrandIdKey].CatInfos,function(key,val) {
                     $.each(val.CatInfos,function(k,v){
-                        Cats[v.CatId] = v.CatName;
+                        // Cats[v.CatId] = v.CatName;
+                        Cats.push(v);
                     })
                 });
             }else{
@@ -581,17 +601,20 @@ $(document).ready(function(){
                 $.each(ProductList,function(key,val) {
 
                     $.each(val.CatInfos,function(k,v){
-                        $.each(v.CatInfos,function(){
-                            Cats[this.CatId] = this.CatName;
+                        $.each(v.CatInfos,function(idx, value){
+                            // Cats[this.CatId] = this.CatName;
+                            Cats.push(value)
                         })
                     })
                 });
             }
-            for(i in Cats){
-                CateTag += '<li class="sift-item" data-catid="'+ i +'">'+ Cats[i] +'\
+            console.log(Cats)
+            $.each(Cats, function(i, j){
+               var className = i > 4 ? ' hidden': '';
+                CateTag += '<li class="sift-item '+ className +'" data-catid="'+ j.CatId +'">'+ j.CatName +'\
                                 <span class="icon-selected"></span>\
                            </li>';
-           }
+           })
         }
         CateTag+='<div class="clear"></div>';
         $(".categorytwo_tag").html(CateTag);
@@ -602,7 +625,7 @@ $(document).ready(function(){
     });
 
 
-     //筛选条件  品类
+     //筛选条件  二级品类
     $(document).on("click",".categorytwo_tag .sift-item",function(){
         if($(this).hasClass("selected")){
             return ;
@@ -628,7 +651,8 @@ $(document).ready(function(){
                         <span class="icon-selected"></span>\
                        </li>';
                 $.each(ret.data.AvailableSizes,function(k,v) {
-                    SizeTag += '<li class="sift-item" data-size="'+ v.Size +'">'+ v.Size +'\
+                   var className = k > 4 ? ' hidden': '';
+                    SizeTag += '<li class="sift-item '+ className +'" data-size="'+ v.Size +'">'+ v.Size +'\
                             <span class="icon-selected"></span>\
                        </li>';
                 });
@@ -726,7 +750,7 @@ $(document).ready(function(){
     $(document).on("focus",".min-price",function(){
         $(window).off('resize.offcanvas.amui');
         if(firstclick == 0){
-            firstclick == 1 ;
+            firstclick = 1 ;
         }
     })
 
@@ -740,13 +764,15 @@ $(document).ready(function(){
 
 
     //重置
-    $(document).on("click","#J_SiftContent .head_tit_right",function(){
-            $(".brand_tag").find('.sift-item').eq(0).trigger('click');
+    $(document).on("click","#J_SiftContent .reset",function(){
+      console.log('reset')
+      $(".brand_tag").find('.sift-item').eq(0).trigger('click');
     });
 
 
     //确定
     $(document).on("click",".sure_btn",function(){
+      console.log('confirm')
         var  BrandId='',OneCatId='',CatId='',Size='';
         $(".sift-item").each(function(){
             if($(this).hasClass("selected")){

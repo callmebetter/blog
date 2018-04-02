@@ -16,10 +16,10 @@
     .sort-tab li.active .icon{color: #d72d83;}
     .category_tag_list,.size_tag_list{display: none;}
     .switch-btn{transform:rotate(180deg);
-        -ms-transform:rotate(180deg); 	/* IE 9 */
-        -moz-transform:rotate(180deg); 	/* Firefox */
+        -ms-transform:rotate(180deg);   /* IE 9 */
+        -moz-transform:rotate(180deg);  /* Firefox */
         -webkit-transform:rotate(180deg); /* Safari 和 Chrome */
-        -o-transform:rotate(180deg); 	/* Opera */}
+        -o-transform:rotate(180deg);  /* Opera */}
     /*.d_updname_btn{padding-bottom: 30px;}*/
     .d_updname_btn{position: fixed;bottom: 0px;width: 100%;z-index: 100;}
     .vat{vertical-align: top;}
@@ -99,6 +99,23 @@
 }
 .sort-tab::after {
   clear: both;
+}
+
+.new-active {
+  left: auto;
+  width: 80vw;
+  display: block;
+}
+.new-button>span {
+  width: 50%;
+  float: left;
+}
+.d_updname_btn span:nth-of-type(2){
+  background-color: #ececec;
+  color: #666;
+}
+.hidden {
+  display: none;
 }
 </style>
 <!-- <section class="bgw search-head-edit">
@@ -204,75 +221,21 @@
 
 
 <!--筛选-->
-<div id="J_SiftContent" class="am-offcanvas sm-offcanvas" >
-    <div class="am-offcanvas-bar am-offcanvas-bar-flip">
+<div id="J_SiftContent" class="am-offcanvas sm-offcanvas " >
+    <div class="am-offcanvas-bar am-offcanvas-bar-flip new-active">
         <header id="subHead">
-            <div class="head_tit_left shift-btn-right">
+            <!-- <div class="head_tit_left shift-btn-right">
                 取消
-            </div>
+            </div> -->
             <div class="head_tit_center">
                 筛选
             </div>
-            <div class="head_tit_right c99">
+           <!--  <div class="head_tit_right c99">
                 重置
-            </div>
+            </div> -->
         </header>
         <div class="bgw content">
-            <div class="sift-row ">
-                <div class="row-head J_siftRowExpand">
-                    <span class="title">品牌</span>
-                    <span class="fr icon icon-top"></span>
-                </div>
-                <div class="row-body">
-                    <ul class="clearfix brand_tag">
-                        <!--<li class="sift-item selected J_siftItem">全部
-                            <span class="icon-selected"></span>
-                        </li>
-                        <div class="clear"></div>-->
-                    </ul>
-                </div>
-            </div>
-           <div class="sift-row category_tag_list" >
-                <div class="row-head J_siftRowExpand">
-                    <span class="title">一级品类</span>
-                    <span class="fr icon icon-top"></span>
-                </div>
-                <div class="row-body">
-                    <ul class="clearfix category_tag">
-                        <!--<li class="sift-item selected J_siftItem">全部
-                            <span class="icon-selected"></span>
-                        </li>
-                        <div class="clear"></div>-->
-                    </ul>
-                </div>
-            </div>
-            <div class="sift-row categorytwo_tag_list" >
-                <div class="row-head J_siftRowExpand">
-                    <span class="title">二级品类</span>
-                    <span class="fr icon icon-top"></span>
-                </div>
-                <div class="row-body">
-                    <ul class="clearfix categorytwo_tag">
-
-                    </ul>
-                </div>
-            </div>
-
-            <div class="sift-row size_tag_list">
-                <div class="row-head J_siftRowExpand">
-                    <span class="title">尺码</span>
-                    <span class="fr icon icon-top"></span>
-                </div>
-                <div class="row-body">
-                    <ul class="clearfix size_tag">
-                        <!--<li class="sift-item selected J_siftItem" >全部
-                            <span class="icon-selected"></span>
-                        </li>-->
-
-                    </ul>
-                </div>
-            </div>
-            <div class="sift-row ">
+          <div class="sift-row ">
                 <div class="row-head J_siftRowExpand">
                     <span class="title">价格区间（元）</span>
                 </div>
@@ -295,9 +258,64 @@
                     </div>
                 </div>
             </div>
+            <div class="sift-row ">
+                <div class="row-head J_siftRowExpand">
+                    <span class="title">品牌</span>
+                    <span class="fr icon " data-status="open">展开</span>
+                </div>
+                <div class="row-body">
+                    <ul class="clearfix brand_tag">
+                        <!--<li class="sift-item selected J_siftItem">全部
+                            <span class="icon-selected"></span>
+                        </li>
+                        <div class="clear"></div>-->
+                    </ul>
+                </div>
+            </div>
+           <div class="sift-row category_tag_list" >
+                <div class="row-head J_siftRowExpand">
+                    <span class="title">一级品类</span>
+                    <span class="fr icon " data-status="open">展开</span>
+                </div>
+                <div class="row-body">
+                    <ul class="clearfix category_tag">
+                        <!--<li class="sift-item selected J_siftItem">全部
+                            <span class="icon-selected"></span>
+                        </li>
+                        <div class="clear"></div>-->
+                    </ul>
+                </div>
+            </div>
+            <div class="sift-row categorytwo_tag_list" >
+                <div class="row-head J_siftRowExpand">
+                    <span class="title">二级品类</span>
+                    <span class="fr icon " data-status="open">展开</span>
+                </div>
+                <div class="row-body">
+                    <ul class="clearfix categorytwo_tag">
+
+                    </ul>
+                </div>
+            </div>
+
+            <div class="sift-row size_tag_list">
+                <div class="row-head J_siftRowExpand">
+                    <span class="title">尺码</span>
+                    <span class="fr icon " data-status="open">展开</span>
+                </div>
+                <div class="row-body">
+                    <ul class="clearfix size_tag">
+                        <!--<li class="sift-item selected J_siftItem" >全部
+                            <span class="icon-selected"></span>
+                        </li>-->
+
+                    </ul>
+                </div>
+            </div>
+
         </div>
-        <div class="d_updname_btn sure_btn">
-            <span>确认</span>
+        <div class="d_updname_btn  new-button">
+            <span class="reset">重置</span> <span class="sure_btn">确认</span>
         </div>
     </div>
 </div>
@@ -363,11 +381,20 @@
         var $J_SiftContent = $("#J_SiftContent");
         $J_SiftContent.offCanvas('close');
     })
+
+
+    var strSet = {
+      'open': '展开',
+      'close': '收起'
+    }
     $(document).on("click",".row-head .icon",function(){
-        if($(this).hasClass("switch-btn")){
-            $(this).removeClass("switch-btn").parent().next().slideDown();
+       var  $this = $(this);
+       var status = $this.data('status');
+       console.log(status);
+        if(status == 'open'){
+            $this.parent().next().slideDown();
         }else{
-            $(this).addClass("switch-btn").parent().next().slideUp();
+            $this.parent().next().slideUp();
         }
     });
     $("#J_SiftContent .content").height($(window).height()-90);
