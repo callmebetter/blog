@@ -505,7 +505,7 @@ $(document).ready(function(){
            $.each(data,function(k,v) {
             console.log(k)
                var className = k > 4 ? ' hidden': '';
-               CateTag += '<li class="sift-item '+ className +'" data-onecatid="'+ v.OneCatId +'">'+ v.OneCatName +'\
+               CateTag += '<li class="sift-item '+ className +'" data-visibility="'+ className +'" data-onecatid="'+ v.OneCatId +'">'+ v.OneCatName +'\
                                 <span class="icon-selected"></span>\
                            </li>';
            });
@@ -525,7 +525,7 @@ $(document).ready(function(){
            $.each(OneCats, function(i, v){
             v && console.log(i)
              var className = i > 4 ? ' hidden': '';
-                if(v){CateTag += '<li class="sift-item '+ className +'" data-onecatid="'+ v.OneCatId +'">'+ v.OneCatName +'\
+                if(v){CateTag += '<li class="sift-item '+ className +'" data-visibility="'+ className +'" data-onecatid="'+ v.OneCatId +'">'+ v.OneCatName +'\
                                 <span class="icon-selected"></span>\
                            </li>';}
            })
@@ -560,7 +560,7 @@ $(document).ready(function(){
                             $.each(val.CatInfos,function(k,v){
                               console.log('%d-%o', k,v)
                               var className = k > 4 ? ' hidden': '';
-                                CateTag += '<li class="sift-item '+ className +'" data-catid="'+ v.CatId +'">'+ v.CatName +'\
+                                CateTag += '<li class="sift-item '+ className +'" data-visibility="'+ className +'"data-catid="'+ v.CatId +'">'+ v.CatName +'\
                                             <span class="icon-selected"></span>\
                                        </li>';
 
@@ -582,7 +582,7 @@ $(document).ready(function(){
                     console.log(Cats)
                     $.each( Cats, function(i, v){
                        var className = i > 4 ? ' hidden': '';
-                        CateTag += '<li class="sift-item '+ className +'" data-catid="'+ j.CatId +'">'+ j.CatName +'\
+                        CateTag += '<li class="sift-item '+ className +'" data-visibility="'+ className +'" data-catid="'+ j.CatId +'">'+ j.CatName +'\
                                 <span class="icon-selected"></span>\
                            </li>';
                     })
@@ -611,7 +611,7 @@ $(document).ready(function(){
             console.log(Cats)
             $.each(Cats, function(i, j){
                var className = i > 4 ? ' hidden': '';
-                CateTag += '<li class="sift-item '+ className +'" data-catid="'+ j.CatId +'">'+ j.CatName +'\
+                CateTag += '<li class="sift-item '+ className +'" data-visibility="'+ className +'" data-catid="'+ j.CatId +'">'+ j.CatName +'\
                                 <span class="icon-selected"></span>\
                            </li>';
            })
@@ -652,7 +652,7 @@ $(document).ready(function(){
                        </li>';
                 $.each(ret.data.AvailableSizes,function(k,v) {
                    var className = k > 4 ? ' hidden': '';
-                    SizeTag += '<li class="sift-item '+ className +'" data-size="'+ v.Size +'">'+ v.Size +'\
+                    SizeTag += '<li class="sift-item '+ className +'" data-visibility="'+ className +'" data-size="'+ v.Size +'">'+ v.Size +'\
                             <span class="icon-selected"></span>\
                        </li>';
                 });
