@@ -117,6 +117,34 @@
 .hidden {
   display: none;
 }
+.row-body .sift-item {
+  background-color: #f5f5f5;
+  color:#666;
+  border-radius: 18px;
+}
+.row-body li.selected {
+   background-color: #d12d83;
+  color: #fff;
+}
+.sift-row .row-head .icon {
+  color: #747474;
+}
+.d_price_section span:nth-child(1), .d_price_section span:nth-child(3){
+  background-color: #ececec;
+  border:0;
+}
+.sift-row .row-head {
+  color: #333
+}
+.d_updname_btn span {
+  margin:auto;
+}
+.d_price_section .d_section_differ span{
+  border-radius: unset;
+    border-bottom: 1px solid #999;
+    height: 0;
+}
+
 </style>
 <!-- <section class="bgw search-head-edit">
         <section class="auto92">
@@ -243,7 +271,7 @@
                     <div class="d_price_section">
                         <p>
                             <span class="d_section_left"><input type="text" class="min-price" placeholder="最低价" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"> </span>
-                            <span class="d_section_differ"><span></span></span>
+                            <span class="d_section_differ"><span ></span></span>
                             <span class="d_section_right"><input type="text" class="max-price" placeholder="最高价" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" > </span>
                         </p>
                     </div>
@@ -384,17 +412,20 @@
 
 
     var strSet = {
-      'open': '展开',
-      'close': '收起'
+      'open': '收起',
+      'close': '展开'
     }
     $(document).on("click",".row-head .icon",function(){
        var  $this = $(this);
        var status = $this.data('status');
-       console.log(status);
+        if($this.parent().next().find('[data-visibility=" hidden"]').length <= 0) return;
         if(status == 'open'){
-            $this.parent().next().slideDown();
+            $this.parent().next().find('[data-visibility=" hidden"]').slideDown();
+            $this.data({status: 'close'}).text(strSet[status]);
         }else{
-            $this.parent().next().slideUp();
+           $this.parent().next().find('[data-visibility=" hidden"]').slideUp();
+           $this.data({status: 'open'}).text(strSet[status]);
+
         }
     });
     $("#J_SiftContent .content").height($(window).height()-90);

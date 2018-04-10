@@ -8,6 +8,53 @@ define(function(require) {
       loaded: true
     }
   }
+  var ajax = function(year){
+   return  $.ajax({
+       url: m.baseUrl + '/financial/GetFullReturnRecord',
+        type: 'post',
+        data: { Year: year },
+        dataType: 'jsonp'
+      })
+  }
+  var sum = function(arr) {
+    var s = 0;
+    for (var i=arr.length-1; i>=0; i--) {
+        s += arr[i];
+    }
+    return s;
+}
+  $.when(ajax(2018), ajax(2019) )
+    .done(function(a, b){
+      var first, second;
+      var returnList = [], unreturnList = [];
+      var d1 = a[0].data, d2 = b[0].data;
+      if(!d1.ErrCode) {
+        first = d1.List ? d1.List  : [];
+      }
+      if(!d2.ErrCode) {
+        second = d2.List ? d2.List  : [];
+      }
+     console.log(a,  $.type(a));
+     console.log(b,  $.type(b))
+     // var sumArray = [];
+     // sumArray.push.apply(sumArray, a[0].data.List, b[0].data.List);
+     var sumArray = $.map($.merge(first, second), function(val, key){
+             if(val){
+              return val.Item2
+             }
+     })
+     $.each(sumArray, function(k, v){
+       if(v.ReturnStatus == 0){
+        unreturnList.push(v.ReturnAmoun)
+       } else if(v.ReturnStatus == 1) {
+         returnList.push(v.ReturnAmoun)
+       }
+     })
+     console.log(sum(returnList), sum(unreturnList))
+    })
+    .fail(function(i, j){
+      console.log(i, j)
+    })
  var init = false;
   //获取明细
   var namespace = {

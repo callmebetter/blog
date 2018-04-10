@@ -343,9 +343,7 @@ $(document).ready(function(){
                   if($(this).hasClass('price_sort')){
 
                     var sort = $(this).data('sort');
-                    console.log(sort)
                     if(sort != 0){
-                      console.log($(this))
                       $(this).data('sort', 0);
                     }
                   }
@@ -452,22 +450,18 @@ $(document).ready(function(){
             jsonp:'callback',
             type:'post'
         }).done(function(ret){
-          console.log(ret)
             ProductList = ret.data.ModelList;
             if(ret.status){
                 if(ProductList.length>0){
                     var BrandTag = '<li class="sift-item  J_siftItem" data-BrandId="">全部\
-                    <span class="icon-selected"></span>\
                 </li>';
                 }else{
                     var BrandTag = '<li class="sift-item  J_siftItem" data-BrandId="">'+$(".head_tit_center").html()+'\
-                    <span class="icon-selected"></span>\
                 </li>';
                 }
 
                 $.each(ret.data.ModelList,function(k,v) {
                     BrandTag += '<li class="sift-item" data-BrandId="'+ v.BrandId +'">'+ v.BrandName +'\
-                    <span class="icon-selected"></span>\
                 </li>';
                 });
                 BrandTag+='<div class="clear"></div>';
@@ -484,6 +478,13 @@ $(document).ready(function(){
     //筛选条件 品牌
     $(document).on("click",".brand_tag .sift-item",function(){
         if($(this).hasClass("selected")){
+          if($(this).index() == 0){
+            $('#J_SiftContent').find('.selected').removeClass('selected');
+            var $last4Rows = $('#J_SiftContent .row-body:gt(0)');
+            $.each($last4Rows, function(k, v){
+              $(this).find('.sift-item').eq(0).addClass('selected')
+            })
+          }
             return ;
         }
        var brandid = $(this).attr("data-brandid");
@@ -494,39 +495,29 @@ $(document).ready(function(){
        }
         $(this).addClass("selected").siblings().removeClass("selected");
         var i=$(this).index();
-        console.log(i)
         BrandIdKey = i-1;
         var CateTag = '<li class="sift-item  J_siftItem" data-onecatid="" >全部\
-                            <span class="icon-selected"></span>\
                            </li>';
         if(BrandIdKey>=0){
            var data=ProductList[BrandIdKey].CatInfos;
-           console.log( 'ProductList-%o' ,ProductList)
            $.each(data,function(k,v) {
-            console.log(k)
                var className = k > 4 ? ' hidden': '';
                CateTag += '<li class="sift-item '+ className +'" data-visibility="'+ className +'" data-onecatid="'+ v.OneCatId +'">'+ v.OneCatName +'\
-                                <span class="icon-selected"></span>\
                            </li>';
            });
 
         }else{
-           console.log( 'ProductList-%o' ,ProductList)
            var OneCats =[];
            $.each(ProductList,function(key,val){
                 $.each(val.CatInfos,function(k,v){
-                  console.log(v)
                     // OneCats[v.OneCatId] = v.OneCatName;
                     OneCats.push(v);
 
                 })
            })
-           console.log(OneCats)
            $.each(OneCats, function(i, v){
-            v && console.log(i)
              var className = i > 4 ? ' hidden': '';
                 if(v){CateTag += '<li class="sift-item '+ className +'" data-visibility="'+ className +'" data-onecatid="'+ v.OneCatId +'">'+ v.OneCatName +'\
-                                <span class="icon-selected"></span>\
                            </li>';}
            })
         }
@@ -549,19 +540,15 @@ $(document).ready(function(){
         var i = $(this).index();
         $(this).addClass("selected").siblings().removeClass("selected");
         var CateTag = '<li class="sift-item  J_siftItem" data-catid="" >全部\
-                            <span class="icon-selected"></span>\
                            </li>';
         if(OneCatId){
             if(BrandIdKey>=0){
                    var data = ProductList[BrandIdKey].CatInfos;
                    $.each(data,function(key,val) {
-                    console.log('%s--%o', key, val)
                         if(val.OneCatId==OneCatId){
                             $.each(val.CatInfos,function(k,v){
-                              console.log('%d-%o', k,v)
                               var className = k > 4 ? ' hidden': '';
                                 CateTag += '<li class="sift-item '+ className +'" data-visibility="'+ className +'"data-catid="'+ v.CatId +'">'+ v.CatName +'\
-                                            <span class="icon-selected"></span>\
                                        </li>';
 
                             })
@@ -579,11 +566,9 @@ $(document).ready(function(){
                              }
                         })
                     })
-                    console.log(Cats)
                     $.each( Cats, function(i, v){
                        var className = i > 4 ? ' hidden': '';
-                        CateTag += '<li class="sift-item '+ className +'" data-visibility="'+ className +'" data-catid="'+ j.CatId +'">'+ j.CatName +'\
-                                <span class="icon-selected"></span>\
+                        CateTag += '<li class="sift-item '+ className +'" data-visibility="'+ className +'" data-catid="'+ v.CatId +'">'+ v.CatName +'\
                            </li>';
                     })
              }
@@ -608,11 +593,9 @@ $(document).ready(function(){
                     })
                 });
             }
-            console.log(Cats)
             $.each(Cats, function(i, j){
                var className = i > 4 ? ' hidden': '';
                 CateTag += '<li class="sift-item '+ className +'" data-visibility="'+ className +'" data-catid="'+ j.CatId +'">'+ j.CatName +'\
-                                <span class="icon-selected"></span>\
                            </li>';
            })
         }
@@ -648,12 +631,10 @@ $(document).ready(function(){
         }).done(function(ret){
              if(ret.status){
                 var SizeTag = '<li class="sift-item selected J_siftItem" data-size="">全部\
-                        <span class="icon-selected"></span>\
                        </li>';
                 $.each(ret.data.AvailableSizes,function(k,v) {
                    var className = k > 4 ? ' hidden': '';
                     SizeTag += '<li class="sift-item '+ className +'" data-visibility="'+ className +'" data-size="'+ v.Size +'">'+ v.Size +'\
-                            <span class="icon-selected"></span>\
                        </li>';
                 });
                 SizeTag+='<div class="clear"></div>';
@@ -765,14 +746,13 @@ $(document).ready(function(){
 
     //重置
     $(document).on("click","#J_SiftContent .reset",function(){
-      console.log('reset')
+      $('.d_price_section input').val('');
       $(".brand_tag").find('.sift-item').eq(0).trigger('click');
     });
 
 
     //确定
     $(document).on("click",".sure_btn",function(){
-      console.log('confirm')
         var  BrandId='',OneCatId='',CatId='',Size='';
         $(".sift-item").each(function(){
             if($(this).hasClass("selected")){
