@@ -34,8 +34,8 @@ define(function(require) {
       if(!d2.ErrCode) {
         second = d2.List ? d2.List  : [];
       }
-     console.log(a,  $.type(a));
-     console.log(b,  $.type(b))
+     // console.log(a,  $.type(a));
+     // console.log(b,  $.type(b))
      // var sumArray = [];
      // sumArray.push.apply(sumArray, a[0].data.List, b[0].data.List);
      var sumArray = $.map($.merge(first, second), function(val, key){
@@ -50,7 +50,9 @@ define(function(require) {
          returnList.push(v.ReturnAmoun)
        }
      })
-     console.log(sum(returnList), sum(unreturnList))
+      console.group('金额')
+     console.log('已经返现金额： %d，待返现金额 %d', sum(returnList), sum(unreturnList))
+      console.groupEnd('金额')
     })
     .fail(function(i, j){
       console.log(i, j)
